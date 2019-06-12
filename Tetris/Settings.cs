@@ -18,9 +18,9 @@ namespace Tetris
     {
         public static int Width { get; set; }
         public static int Height { get; set; }
+        public static int Size { get; set; }
         public static int Speed { get; set; }
         public static int Score { get; set; }
-        public static int Points { get; set; }
         public static bool GameOver { get; set; }
         public static Direction direction { get; set; }
         public static int CountBlocks { get; set; }
@@ -29,15 +29,17 @@ namespace Tetris
 
         public Settings()
         {
-            Width = 32;
-            Height = 32;
+            Width = 10;
+            Height = 20;
+            Size = 20; //rozmiar jednego kwadratu
             Speed = 8;
             Score = 0;
-            Points = 100;
             GameOver = false;
             direction = Direction.Down;
             CollisionRight = false;
             CollisionLeft = false;
+
+            // 20pix * 10pix  X  20pix * 20pix = 200 X 400
         }
     }
 }

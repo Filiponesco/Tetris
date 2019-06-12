@@ -13,6 +13,7 @@ namespace Tetris
     public partial class Form1 : Form
     {
         private List<Prostokat> Blocks = new List<Prostokat>();
+        //private List<Figura> Blocks = new List<Figura>();
 
         public Form1()
         {
@@ -37,6 +38,13 @@ namespace Tetris
             //Set settings to default
             new Settings();
 
+            //Set Ekran
+            int h = Settings.Height;
+            int w = Settings.Width;
+            int s = Settings.Size;
+            pbEkran.Size = new System.Drawing.Size(w * s, h * s);
+
+
             //Create new block
             Blocks.Clear();
             GenerateBlock();
@@ -48,10 +56,11 @@ namespace Tetris
 
         private void GenerateBlock()
         {
-            int maxXPos = pbEkran.Size.Width / Settings.Width;
+            int maxXPos = pbEkran.Size.Width / Settings.Size - 1; //-1 bo anchor point to lewy gorny wierzchołek
 
             Random random = new Random();
-            Blocks.Add(new Prostokat { X = random.Next(0, maxXPos+1), Y = 0 });
+            Blocks.Add(new Prostokat { X = random.Next(0, maxXPos), Y = 0 });
+            //Blocks.Add(new Figura(random.Next(0, maxXPos)));
         }
 
         private void UpdateScreen(object sender, EventArgs e)
@@ -88,13 +97,13 @@ namespace Tetris
             {
                 for (int i = 0; i < Blocks.Count; i++)
                 {
-                    Brush blockColour;
-                    blockColour = Brushes.Green;     //Draw block
+                        Brush blockColour;
+                        blockColour = Brushes.Green;     //Draw block
 
-                    canvas.FillRectangle(blockColour,
-                        new Rectangle(Blocks[i].X * Settings.Width,
-                                      Blocks[i].Y * Settings.Height,
-                                      Settings.Width, Settings.Height));
+                        canvas.FillRectangle(blockColour,
+                            new Rectangle(Blocks[i].X * Settings.Size,
+                                          Blocks[i].Y * Settings.Size,
+                                          Settings.Size, Settings.Size));
                 }
             }
             else
@@ -122,13 +131,13 @@ namespace Tetris
                         Blocks[index].Y++;
                         break;
                     case Direction.Down:
-                        Blocks[index].Y++;
+                        Blocks[index].Y+=1;
                         break;
                 }
 
                 //Get maximum X and Y Pos
-                int maxXPos = pbEkran.Size.Width / Settings.Width;
-                int maxYPos = pbEkran.Size.Height / Settings.Height;
+                int maxXPos = pbEkran.Size.Width / Settings.Size - 1;
+                int maxYPos = pbEkran.Size.Height / Settings.Size - 1;
 
                 //Detect collission with floor  
                 if (Blocks[index].Y >= maxYPos)
@@ -160,6 +169,35 @@ namespace Tetris
                             Settings.GameOver = true;
                         break;
 
+                    }
+                }
+                // checks if any row is completed, if is, delete this line and moves rest one block down
+                for (int i = 0; i < Settings.Height; i++)
+                {
+                    int counter = 0;
+                    for (int j = 0; j < Settings.Width; j++)
+                    {
+                        foreach (var b in Blocks)
+                            if (b.X == j && b.Y == i)
+                                counter++;
+                    }
+
+                    if (counter == Settings.Width)
+                    {
+                        List<int> toDelete = new List<int>();
+
+                        for (int j = 0; j < Blocks.Count; j++)
+                            if (Blocks[j].Y == i)
+                                toDelete.Add(j);
+
+                        for (int j = toDelete.Count - 1; j >= 0; j--)
+                            Blocks.RemoveAt(toDelete[j]);
+
+                        for (int j = 0; j < Blocks.Count; j++)
+                            if (Blocks[j].Y < i)
+                                Blocks[j].Y += 1;
+                        Settings.Score += 10;
+                        lblScore.Text = Settings.Score.ToString();
                     }
                 }
             }
