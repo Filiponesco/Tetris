@@ -12,8 +12,9 @@ namespace Tetris
 {
     public partial class Form1 : Form
     {
-        private List<Prostokat> Blocks = new List<Prostokat>();
-        //private List<Figura> Blocks = new List<Figura>();
+        //private List<Prostokat> Blocks = new List<Prostokat>();
+        private List<Figura> Blocks = new List<Figura>();
+        private Figura f1;
 
         public Form1()
         {
@@ -59,8 +60,9 @@ namespace Tetris
             int maxXPos = pbEkran.Size.Width / Settings.Size - 1; //-1 bo anchor point to lewy gorny wierzchołek
 
             Random random = new Random();
-            Blocks.Add(new Prostokat { X = random.Next(0, maxXPos), Y = 0 });
+            //Blocks.Add(new Prostokat { X = random.Next(0, maxXPos), Y = 0 });
             //Blocks.Add(new Figura(random.Next(0, maxXPos)));
+            Figura f1 = new Figura(random.Next(0, maxXPos));
         }
 
         private void UpdateScreen(object sender, EventArgs e)
@@ -97,13 +99,25 @@ namespace Tetris
             {
                 for (int i = 0; i < Blocks.Count; i++)
                 {
+                    for (int j = 0; j < f1.Figury.Count; j++)
+                    {
                         Brush blockColour;
                         blockColour = Brushes.Green;     //Draw block
 
+                        //canvas.FillRectangle(blockColour,
+                        //    new Rectangle(Blocks[i].X * Settings.Size,
+                        //                  Blocks[i].Y * Settings.Size,
+                        //                  Settings.Size, Settings.Size));
                         canvas.FillRectangle(blockColour,
-                            new Rectangle(Blocks[i].X * Settings.Size,
-                                          Blocks[i].Y * Settings.Size,
+                            new Rectangle(f1.Figury[i].X * Settings.Size,
+                                          f1.Figury[i].Y * Settings.Size,
                                           Settings.Size, Settings.Size));
+
+                        //canvas.FillRectangle(blockColour,
+                        //        new Rectangle(Blocks[i].Figura.Figury[j] * Settings.Size,
+                        //                      Figura.Figury[i].Y * Settings.Size,
+                        //                      Settings.Size, Settings.Size));
+                    }
                 }
             }
             else

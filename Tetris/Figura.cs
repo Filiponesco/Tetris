@@ -11,7 +11,7 @@ namespace Tetris
 {
     class Figura
     {
-        public static List<Prostokat> Figury { get; set; }
+        public List<Prostokat> Figury { get; set; }
         public int X { get; set; }
         public int Y { get; set; }
 
