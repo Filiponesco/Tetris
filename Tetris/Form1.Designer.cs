@@ -34,6 +34,7 @@
             this.lblScore = new System.Windows.Forms.Label();
             this.lblGameOver = new System.Windows.Forms.Label();
             this.lblTxtScore = new System.Windows.Forms.Label();
+            this.HMoveTimer = new System.Windows.Forms.Timer(this.components);
             ((System.ComponentModel.ISupportInitialize)(this.pbEkran)).BeginInit();
             this.SuspendLayout();
             // 
@@ -45,7 +46,6 @@
             this.pbEkran.Size = new System.Drawing.Size(254, 445);
             this.pbEkran.TabIndex = 0;
             this.pbEkran.TabStop = false;
-            this.pbEkran.Click += new System.EventHandler(this.pbEkran_Click);
             this.pbEkran.Paint += new System.Windows.Forms.PaintEventHandler(this.PbEkran_Paint);
             // 
             // lblScore
@@ -77,6 +77,10 @@
             this.lblTxtScore.TabIndex = 3;
             this.lblTxtScore.Text = "Score";
             // 
+            // HMoveTimer
+            // 
+            this.HMoveTimer.Tick += new System.EventHandler(this.HorrizontalMove);
+            // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -103,6 +107,7 @@
         private System.Windows.Forms.Label lblScore;
         private System.Windows.Forms.Label lblGameOver;
         private System.Windows.Forms.Label lblTxtScore;
+        private System.Windows.Forms.Timer HMoveTimer;
     }
 }
 

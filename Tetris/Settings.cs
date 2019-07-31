@@ -20,6 +20,7 @@ namespace Tetris
         public static int Height { get; set; }
         public static int Size { get; set; }
         public static int Speed { get; set; }
+        public static int SpeedHorrizMove { get; set; }
         public static int Score { get; set; }
         public static bool GameOver { get; set; }
         public static Direction direction { get; set; }
@@ -32,7 +33,8 @@ namespace Tetris
             Width = 10;
             Height = 20;
             Size = 20; //rozmiar jednego kwadratu
-            Speed = 8;
+            Speed = 2;
+            SpeedHorrizMove = 12;
             Score = 0;
             GameOver = false;
             direction = Direction.Down;

@@ -11,30 +11,12 @@ namespace Tetris
 {
     class Figura
     {
-        public List<Prostokat> Figury { get; set; }
-        public int X { get; set; }
-        public int Y { get; set; }
-
-        //int[,] figures = new int[7, 4]
-        //    {
-        //        {1,3,5,7}, // I
-        //        {2,4,5,7}, // Z
-        //        {3,5,4,6}, // S
-        //        {3,5,4,7}, // T
-        //        {2,3,5,7}, // L
-        //        {3,5,7,6}, // J
-        //        {2,3,4,5}, // O
-        //    };
-
+        #region properties
+        public List<Prostokat> Bloki { get; set; }
+        
+        #endregion
         Hashtable Figures = new Hashtable()
         {
-            //{"O", new int[,]{ {0, 0}, {0, 1}, {1, 0}, {1, 1} } },
-            //{"I", new int[,]{ {0, 0}, {0, 1}, {0, 2}, {0, 3} } },
-            //{"S", new int[,]{ {1, 1}, {1, 2}, {0, 1}, {1, 2} } },
-            //{"Z", new int[,]{ {0, 1}, {0, 2}, {1, 2}, {1, 3} } },
-            //{"L", new int[,]{ {0, 0}, {0, 1}, {0, 2}, {1, 2} } },
-            //{"J", new int[,]{ {1, 1}, {1, 2}, {1, 3}, {0, 3} } },
-            //{"T", new int[,]{ {1, 1}, {1, 2}, {0, 2}, {1, 3} } },
 
             {"O", new int[,]{ {0, 0}, {0, 1}, {1, 0}, {1, 1} } },
             {"I", new int[,]{ {0, 0}, {0, 1}, {0, 2}, {0, 3} } },
@@ -46,17 +28,26 @@ namespace Tetris
         };
         string[] Keys = new string[] { "O", "I", "S", "Z", "L", "J", "T" };
 
-        public Figura(int x)
+        public Figura()
         {
-            Figury = new List<Prostokat>();
+            Bloki = new List<Prostokat>();
             Random r = new Random();
             int index = r.Next(0, 7);
             string key = Keys[index];
             int[,] temp = (int[,])Figures[key];
             for (int i = 0; i < 4; i++)
             {
-               Figury.Add(new Prostokat {X = temp[i, 0], Y = temp[i, 1] });
+               Bloki.Add(new Prostokat {X = temp[i, 0] + Settings.Width/2, Y = temp[i, 1] });
             }
+        }
+        public void Move(int a, int b)
+        {
+            for(int i =0; i < Bloki.Count;i++)
+            {
+                Bloki[i].X += a;
+                Bloki[i].Y += b;
+            }
+
         }
 
         //public void Clear()
