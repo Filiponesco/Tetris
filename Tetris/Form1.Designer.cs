@@ -76,11 +76,7 @@
             this.lblTxtScore.Size = new System.Drawing.Size(68, 25);
             this.lblTxtScore.TabIndex = 3;
             this.lblTxtScore.Text = "Score";
-            // 
-            // HMoveTimer
-            // 
-            this.HMoveTimer.Tick += new System.EventHandler(this.HorrizontalMove);
-            // 
+            //            // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);

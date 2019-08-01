@@ -13,7 +13,6 @@ namespace Tetris
 {
     public partial class Form1 : Form
     {
-        //private List<Prostokat> Figury = new List<Prostokat>();
         private List<Figura> Figury = new List<Figura>();
         private Thread th;
 
@@ -28,9 +27,6 @@ namespace Tetris
             gameTimer.Tick += UpdateScreen;
             gameTimer.Start();
 
-            HMoveTimer.Interval = 1000 / Settings.SpeedHorrizMove;
-            HMoveTimer.Tick += HorrizontalMove;
-            HMoveTimer.Start();
             //Start New game
             StartGame();
         }
@@ -77,13 +73,6 @@ namespace Tetris
             }
             else
             { 
-                //if (Input.KeyPressed(Keys.Right))
-                //    Settings.direction = Direction.Right;
-                //else if (Input.KeyPressed(Keys.Left))
-                //    Settings.direction = Direction.Left;
-                //else if (Input.KeyPressed(Keys.Down))
-                //    Settings.direction = Direction.Down;
-
                 MoveBlock();
             }
             pbEkran.Invalidate();
@@ -192,7 +181,7 @@ namespace Tetris
                         //}
                 }
         }
-        private void HorrizontalMove(object sender, EventArgs e)
+        private void HorrizontalMove()
         {
             int indexActive = Figury.Count - 1; //aktywny blok
             switch (Settings.direction)
@@ -204,12 +193,16 @@ namespace Tetris
                     Figury[indexActive].Move(-1, 0);
                     break;
             }
+            //pbEkran.Refresh();
             pbEkran.Invalidate();
+            //pbEkran.Refresh();
+            //pbEkran.Update();
         }
         private void Form1_KeyDown(object sender, KeyEventArgs e)
         {
             Input.ChangeState(e.KeyCode, true);
             ZczytanieZnaku();
+            HorrizontalMove();
         }
         private void Form1_KeyUp(object sender, KeyEventArgs e)
         {
