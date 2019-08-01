@@ -24,8 +24,6 @@ namespace Tetris
         public static bool GameOver { get; set; }
         public static Direction direction { get; set; }
         public static int CountBlocks { get; set; }
-        public static bool CollisionRight { get; set; }
-        public static bool CollisionLeft { get; set; }
 
         public Settings()
         {
@@ -36,8 +34,6 @@ namespace Tetris
             Score = 0;
             GameOver = false;
             direction = Direction.Down;
-            CollisionRight = false;
-            CollisionLeft = false;
 
             // 20pix * 10pix  X  20pix * 20pix = 200 X 400
         }

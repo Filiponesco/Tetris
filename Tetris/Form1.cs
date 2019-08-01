@@ -113,73 +113,58 @@ namespace Tetris
             int indexActive = Figury.Count - 1; //aktywny blok
             {
                 Figury[indexActive].Move(0, 1);
+                int maxXPos = GetMaxXPos();
+                int maxYPos = GetMaxYPos();
 
-                        ////Get maximum X and Y Pos
-                        //int maxXPos = pbEkran.Size.Width / Settings.Size - 1;
-                        //int maxYPos = pbEkran.Size.Height / Settings.Size - 1;
+                ////Detect collission with floor  
+                if (Figury[indexActive].CollisionWithFloor(maxYPos))
+                    GenerateBlock();
 
-                        ////Detect collission with floor  
-                        //if (Figury[indexActive].Y >= maxYPos)
-                        //{
-                        //    GenerateBlock();
+                ////Detect collission with other Figury
+                //for (int j = 0; j < Figury.Count; j++)
+                //{
+                //    //if (Dist(Figury[index].X, Figury[index].Y, Figury[j].X, Figury[j].Y) <= 1 && index != j)
+                //    if (
+                //        Figury[indexActive].X == Figury[j].X &&
+                //           Figury[indexActive].Y + 1 == Figury[j].Y && indexActive != j)
+                //    {
+                //        GenerateBlock();
+                //        if (Figury[indexActive].Y <= 1)
+                //            Settings.GameOver = true;
+                //        break;
 
-                        //}
-                        ////Detect Collision with leftWall
-                        //if (Figury[indexActive].X <= 0)
-                        //{
-                        //    Settings.CollisionLeft = true;
-                        //}
-                        ////Detect Collision with rightWall
-                        //if (Figury[indexActive].X >= maxXPos)
-                        //{
-                        //    Settings.CollisionRight = true;
-                        //}
+                //    }
+                //}
+                //// checks if any row is completed, if is, delete this line and moves rest one block down
+                //for (int i = 0; i < Settings.Height; i++)
+                //{
+                //    int counter = 0;
+                //    for (int j = 0; j < Settings.Width; j++)
+                //    {
+                //        foreach (var b in Figury)
+                //            if (b.X == j && b.Y == i)
+                //                counter++;
+                //    }
 
-                        ////Detect collission with other Figury
-                        //for (int j = 0; j < Figury.Count; j++)
-                        //{
-                        //    //if (Dist(Figury[index].X, Figury[index].Y, Figury[j].X, Figury[j].Y) <= 1 && index != j)
-                        //    if (
-                        //        Figury[indexActive].X == Figury[j].X &&
-                        //           Figury[indexActive].Y + 1 == Figury[j].Y && indexActive != j)
-                        //    {
-                        //        GenerateBlock();
-                        //        if (Figury[indexActive].Y <= 1)
-                        //            Settings.GameOver = true;
-                        //        break;
+                //    if (counter == Settings.Width)
+                //    {
+                //        List<int> toDelete = new List<int>();
 
-                        //    }
-                        //}
-                        //// checks if any row is completed, if is, delete this line and moves rest one block down
-                        //for (int i = 0; i < Settings.Height; i++)
-                        //{
-                        //    int counter = 0;
-                        //    for (int j = 0; j < Settings.Width; j++)
-                        //    {
-                        //        foreach (var b in Figury)
-                        //            if (b.X == j && b.Y == i)
-                        //                counter++;
-                        //    }
+                //        for (int j = 0; j < Figury.Count; j++)
+                //            if (Figury[j].Y == i)
+                //                toDelete.Add(j);
 
-                        //    if (counter == Settings.Width)
-                        //    {
-                        //        List<int> toDelete = new List<int>();
+                //        for (int j = toDelete.Count - 1; j >= 0; j--)
+                //            Figury.RemoveAt(toDelete[j]);
 
-                        //        for (int j = 0; j < Figury.Count; j++)
-                        //            if (Figury[j].Y == i)
-                        //                toDelete.Add(j);
-
-                        //        for (int j = toDelete.Count - 1; j >= 0; j--)
-                        //            Figury.RemoveAt(toDelete[j]);
-
-                        //        for (int j = 0; j < Figury.Count; j++)
-                        //            if (Figury[j].Y < i)
-                        //                Figury[j].Y += 1;
-                        //        Settings.Score += 10;
-                        //        lblScore.Text = Settings.Score.ToString();
-                        //    }
-                        //}
-                }
+                //        for (int j = 0; j < Figury.Count; j++)
+                //            if (Figury[j].Y < i)
+                //                Figury[j].Y += 1;
+                //        Settings.Score += 10;
+                //        lblScore.Text = Settings.Score.ToString();
+                //    }
+                //}
+            }
         }
         private void HorrizontalMove()
         {
@@ -187,16 +172,15 @@ namespace Tetris
             switch (Settings.direction)
             {
                 case Direction.Right:
-                    Figury[indexActive].Move(1, 0);
+                    if (!Figury[indexActive].CollisionWithRightWall(GetMaxXPos()))
+                        Figury[indexActive].Move(1, 0);
                     break;
                 case Direction.Left:
-                    Figury[indexActive].Move(-1, 0);
+                    if (!Figury[indexActive].CollisionWithLeftWall())
+                        Figury[indexActive].Move(-1, 0);
                     break;
             }
-            //pbEkran.Refresh();
             pbEkran.Invalidate();
-            //pbEkran.Refresh();
-            //pbEkran.Update();
         }
         private void Form1_KeyDown(object sender, KeyEventArgs e)
         {
@@ -207,9 +191,6 @@ namespace Tetris
         private void Form1_KeyUp(object sender, KeyEventArgs e)
         {
             Input.ChangeState(e.KeyCode, false);
-            Settings.CollisionRight = false;
-            Settings.CollisionLeft = false;
-            Settings.direction = Direction.Down;
         }
         private void Die()
         {
@@ -226,6 +207,14 @@ namespace Tetris
                 Settings.direction = Direction.Right;
             else if (Input.KeyPressed(Keys.Left))
                 Settings.direction = Direction.Left;
+        }
+        private int GetMaxXPos()
+        {
+            return pbEkran.Size.Width / Settings.Size - 1;
+        }
+        private int GetMaxYPos()
+        {
+            return pbEkran.Size.Height / Settings.Size - 1;
         }
     }
 }

@@ -42,12 +42,39 @@ namespace Tetris
         }
         public void Move(int a, int b)
         {
-            for(int i =0; i < Bloki.Count;i++)
+            foreach (Prostokat p in Bloki)
             {
-                Bloki[i].X += a;
-                Bloki[i].Y += b;
+                p.X += a;
+                p.Y += b;
             }
 
+        }
+        public bool CollisionWithFloor(int maxY)
+        {
+            foreach (Prostokat p in Bloki)
+            {
+                if (p.Y >= maxY)
+                    return true;
+            }
+            return false;
+        }
+        public bool CollisionWithLeftWall()
+        {
+            foreach (Prostokat p in Bloki)
+            {
+                if (p.X <= 0)
+                    return true;
+            }
+            return false;
+        }
+        public bool CollisionWithRightWall(int maxX)
+        {
+            foreach(Prostokat p in Bloki)
+            {
+                if (p.X >= maxX)
+                    return true;
+            }
+            return false;
         }
 
         //public void Clear()
