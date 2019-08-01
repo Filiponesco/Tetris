@@ -30,7 +30,7 @@ namespace Tetris
             Width = 10;
             Height = 20;
             Size = 20; //rozmiar jednego kwadratu
-            Speed = 2;
+            Speed = 6;
             Score = 0;
             GameOver = false;
             direction = Direction.Down;

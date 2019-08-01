@@ -76,7 +76,40 @@ namespace Tetris
             }
             return false;
         }
-
+        public static bool CollisionWithOtherFiguryVertically(List<Figura> Figury)
+        {
+            int indexActive = Figury.Count() - 1;
+            for (int j = 0; j < Figury.Count; j++)
+            {
+                for(int i = 0; i < Figury[j].Bloki.Count(); i ++)
+                {
+                    for(int k = 0; k < Figury[indexActive].Bloki.Count(); k++)
+                    {
+                        if (Figury[indexActive].Bloki[k].X == Figury[j].Bloki[i].X &&
+                            Figury[indexActive].Bloki[k].Y + 1 == Figury[j].Bloki[i].Y && indexActive != j)
+                            return true;
+                    }
+                }
+            }
+            return false;
+        }
+        public static bool CollisionWithOtherFiguryHorrizontalLeft(List<Figura> Figury)
+        {
+            int indexActive = Figury.Count() - 1;
+            for (int j = 0; j < Figury.Count; j++)
+            {
+                for (int i = 0; i < Figury[j].Bloki.Count(); i++)
+                {
+                    for (int k = 0; k < Figury[indexActive].Bloki.Count(); k++)
+                    {
+                        if (Figury[indexActive].Bloki[k].X +1 == Figury[j].Bloki[i].X &&
+                            Figury[indexActive].Bloki[k].Y == Figury[j].Bloki[i].Y && indexActive != j)
+                            return true;
+                    }
+                }
+            }
+            return false;
+        }
         //public void Clear()
         //{
         //    Size = 0;

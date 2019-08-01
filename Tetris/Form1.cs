@@ -121,20 +121,10 @@ namespace Tetris
                     GenerateBlock();
 
                 ////Detect collission with other Figury
-                //for (int j = 0; j < Figury.Count; j++)
-                //{
-                //    //if (Dist(Figury[index].X, Figury[index].Y, Figury[j].X, Figury[j].Y) <= 1 && index != j)
-                //    if (
-                //        Figury[indexActive].X == Figury[j].X &&
-                //           Figury[indexActive].Y + 1 == Figury[j].Y && indexActive != j)
-                //    {
-                //        GenerateBlock();
-                //        if (Figury[indexActive].Y <= 1)
-                //            Settings.GameOver = true;
-                //        break;
+                if (Figura.CollisionWithOtherFiguryVertically(Figury))
+                    GenerateBlock();
+                //Detect collision with other Figury to prevent movement
 
-                //    }
-                //}
                 //// checks if any row is completed, if is, delete this line and moves rest one block down
                 //for (int i = 0; i < Settings.Height; i++)
                 //{
@@ -146,24 +136,24 @@ namespace Tetris
                 //                counter++;
                 //    }
 
-                //    if (counter == Settings.Width)
-                //    {
-                //        List<int> toDelete = new List<int>();
+                    //    if (counter == Settings.Width)
+                    //    {
+                    //        List<int> toDelete = new List<int>();
 
-                //        for (int j = 0; j < Figury.Count; j++)
-                //            if (Figury[j].Y == i)
-                //                toDelete.Add(j);
+                    //        for (int j = 0; j < Figury.Count; j++)
+                    //            if (Figury[j].Y == i)
+                    //                toDelete.Add(j);
 
-                //        for (int j = toDelete.Count - 1; j >= 0; j--)
-                //            Figury.RemoveAt(toDelete[j]);
+                    //        for (int j = toDelete.Count - 1; j >= 0; j--)
+                    //            Figury.RemoveAt(toDelete[j]);
 
-                //        for (int j = 0; j < Figury.Count; j++)
-                //            if (Figury[j].Y < i)
-                //                Figury[j].Y += 1;
-                //        Settings.Score += 10;
-                //        lblScore.Text = Settings.Score.ToString();
-                //    }
-                //}
+                    //        for (int j = 0; j < Figury.Count; j++)
+                    //            if (Figury[j].Y < i)
+                    //                Figury[j].Y += 1;
+                    //        Settings.Score += 10;
+                    //        lblScore.Text = Settings.Score.ToString();
+                    //    }
+                    //}
             }
         }
         private void HorrizontalMove()
@@ -172,7 +162,7 @@ namespace Tetris
             switch (Settings.direction)
             {
                 case Direction.Right:
-                    if (!Figury[indexActive].CollisionWithRightWall(GetMaxXPos()))
+                    if (!Figury[indexActive].CollisionWithRightWall(GetMaxXPos()) && !Figura.CollisionWithOtherFiguryHorrizontalLeft(Figury))
                         Figury[indexActive].Move(1, 0);
                     break;
                 case Direction.Left:
