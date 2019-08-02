@@ -6,14 +6,6 @@ using System.Threading.Tasks;
 
 namespace Tetris
 {
-    public enum Direction
-    {
-        Left,
-        Right,
-        Down,
-        Stop
-    }
-
     class Settings
     {
         public static int Width { get; set; }
@@ -22,7 +14,6 @@ namespace Tetris
         public static int Speed { get; set; }
         public static int Score { get; set; }
         public static bool GameOver { get; set; }
-        public static Direction direction { get; set; }
         public static int CountBlocks { get; set; }
 
         public Settings()
@@ -33,7 +24,6 @@ namespace Tetris
             Speed = 6;
             Score = 0;
             GameOver = false;
-            direction = Direction.Down;
 
             // 20pix * 10pix  X  20pix * 20pix = 200 X 400
         }

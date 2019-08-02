@@ -111,7 +111,6 @@ namespace Tetris
         private void MoveBlock()
         {
             int indexActive = Figury.Count - 1; //aktywny blok
-            {
                 Figury[indexActive].Move(0, 1);
                 int maxXPos = GetMaxXPos();
                 int maxYPos = GetMaxYPos();
@@ -123,8 +122,8 @@ namespace Tetris
                 ////Detect collission with other Figury
                 if (Figura.CollisionWithOtherFiguryVertically(Figury))
                     GenerateBlock();
-                //Detect collision with other Figury to prevent movement
-
+            //Detect collision with other Figury to prevent movement
+            Figura.FullRows(Figury, Settings.Width, Settings.Height);
                 //// checks if any row is completed, if is, delete this line and moves rest one block down
                 //for (int i = 0; i < Settings.Height; i++)
                 //{
@@ -154,12 +153,11 @@ namespace Tetris
                     //        lblScore.Text = Settings.Score.ToString();
                     //    }
                     //}
-            }
         }
         private void HorrizontalMove()
         {
             int indexActive = Figury.Count - 1; //aktywny blok
-            switch (Settings.direction)
+            switch (Figury[indexActive].Direction)
             {
                 case Direction.Right:
                     if (!Figury[indexActive].CollisionWithRightWall(GetMaxXPos()) && !Figura.CollisionWithOtherFiguryHorrizontalLeft(Figury))
@@ -193,10 +191,13 @@ namespace Tetris
         }
         private void ZczytanieZnaku()
         {
+            int indexActive = Figury.Count() - 1;
             if (Input.KeyPressed(Keys.Right))
-                Settings.direction = Direction.Right;
+                Figury[indexActive].Direction = Direction.Right;
             else if (Input.KeyPressed(Keys.Left))
-                Settings.direction = Direction.Left;
+                Figury[indexActive].Direction = Direction.Left;
+            else
+                Figury[indexActive].Direction = Direction.Down;
         }
         private int GetMaxXPos()
         {

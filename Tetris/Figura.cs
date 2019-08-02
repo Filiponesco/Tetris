@@ -9,13 +9,31 @@ using System.Windows;
 
 namespace Tetris
 {
+    public enum Direction
+    {
+        Left,
+        Right,
+        Down,
+        Stop
+    }
     class Figura
     {
+        public static List<Prostokat> allBloki = new List<Prostokat>();
         #region properties
         public List<Prostokat> Bloki { get; set; }
-        
+        public Direction Direction { get; set; }
+        public static List<Prostokat> AllBloki {
+            get
+            {
+                return allBloki;
+            }
+            set
+            {
+                allBloki = value;
+            }
+        }
         #endregion
-        Hashtable Figures = new Hashtable()
+        private readonly Hashtable Figures = new Hashtable()
         {
 
             {"O", new int[,]{ {0, 0}, {0, 1}, {1, 0}, {1, 1} } },
@@ -26,18 +44,20 @@ namespace Tetris
             {"J", new int[,]{ {0, 0}, {0, 1}, {0, 2}, {-1, 2} } },
             {"T", new int[,]{ {0, 0}, {0, 1}, {1, 1}, {-1, 1} } },
         };
-        string[] Keys = new string[] { "O", "I", "S", "Z", "L", "J", "T" };
+        private readonly string[] Keys = new string[] { "O", "I", "S", "Z", "L", "J", "T" };
 
         public Figura()
         {
             Bloki = new List<Prostokat>();
             Random r = new Random();
-            int index = r.Next(0, 7);
+            int index = r.Next(0, 1);
             string key = Keys[index];
             int[,] temp = (int[,])Figures[key];
             for (int i = 0; i < 4; i++)
             {
-               Bloki.Add(new Prostokat {X = temp[i, 0] + Settings.Width/2, Y = temp[i, 1] });
+                Prostokat p = new Prostokat { X = temp[i, 0] + Settings.Width / 2, Y = temp[i, 1] };
+                Bloki.Add(p);
+                AllBloki.Add(p);
             }
         }
         public void Move(int a, int b)
@@ -126,6 +146,43 @@ namespace Tetris
                 }
             }
             return false;
+        }
+        //dodac kolizje na ukos
+        public static void FullRows(List<Figura> Figury, int w, int h) //uwaga trzeba pamietac ze klocek musi byc juz nieruchomy zeby zniknal wiersz!
+        {
+            for (int i = 0; i < h; i++)
+            {
+                int counter = 0;
+                for (int j = 0; j < w; j++)
+                {
+                    foreach(Prostokat p in AllBloki) //przyspieszenie pętli
+                    {
+                         if (p.X == j && p.Y == i)
+                         counter++;
+                    }
+                }
+
+                if (counter == w)
+                {
+                    List<int> indexFiguryToDelete = new List<int>();
+                    List<Prostokat> toDelete = new List<Prostokat>();
+
+                    for(int k = 0; k < AllBloki.Count; k++)
+                    {
+                        if (AllBloki[k].Y == i)
+                        {
+                            toDelete.Add(AllBloki[k]);
+                        }
+                    }
+                    for (int j = toDelete.Count - 1; j >= 0; j--)
+                        for (int m = 0; m < Figury.Count; m++)
+                        {
+                            for (int p = 0; p < Figury[m].Bloki.Count; p++)
+                                if (toDelete[j].Equals(Figury[m].Bloki[p]))
+                                    Figury[m].Bloki.Remove(toDelete[j]);
+                        }
+                }
+            }
         }
         //public void Clear()
         //{
