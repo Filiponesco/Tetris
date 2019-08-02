@@ -90,12 +90,12 @@ namespace Tetris
                     for (int j = 0; j < Figury[i].Bloki.Count; j++)
                     {
                         Brush blockColour;
-                        blockColour = Brushes.Green;     //Draw block
-
-                        canvas.FillRectangle(blockColour,
-                            new Rectangle(Figury[i].Bloki[j].X * Settings.Size,
-                                          Figury[i].Bloki[j].Y * Settings.Size,
-                                          Settings.Size, Settings.Size));
+                        blockColour = Brushes.Green;
+                        Rectangle rectangle = new Rectangle(Figury[i].Bloki[j].X * Settings.Size,
+                                          Figury[i].Bloki[j].Y * Settings.Size, Settings.Size, Settings.Size);
+                        Pen border = new Pen(Color.Black);
+                        canvas.FillRectangle(blockColour, rectangle);
+                        canvas.DrawRectangle(border, rectangle);
                     }
                 }
             }
@@ -166,7 +166,7 @@ namespace Tetris
                         Figury[indexActive].Move(1, 0);
                     break;
                 case Direction.Left:
-                    if (!Figury[indexActive].CollisionWithLeftWall())
+                    if (!Figury[indexActive].CollisionWithLeftWall() && !Figura.CollisionWithOtherFiguryHorrizontalRight(Figury))
                         Figury[indexActive].Move(-1, 0);
                     break;
             }
