@@ -116,43 +116,20 @@ namespace Tetris
                 int maxYPos = GetMaxYPos();
 
                 ////Detect collission with floor  
-                if (Figury[indexActive].CollisionWithFloor(maxYPos))
-                    GenerateBlock();
+            if (Figury[indexActive].CollisionWithFloor(maxYPos))
+            {
+                Figury[indexActive].Direction = Direction.Stop;
+                GenerateBlock();
+            }
+            if (Figura.CollisionWithOtherFiguryVertically(Figury))
+            {
+                Figury[indexActive].Direction = Direction.Stop;
+                GenerateBlock();
+            }
 
-                ////Detect collission with other Figury
-                if (Figura.CollisionWithOtherFiguryVertically(Figury))
-                    GenerateBlock();
-            //Detect collision with other Figury to prevent movement
-            Figura.FullRows(Figury, Settings.Width, Settings.Height);
-                //// checks if any row is completed, if is, delete this line and moves rest one block down
-                //for (int i = 0; i < Settings.Height; i++)
-                //{
-                //    int counter = 0;
-                //    for (int j = 0; j < Settings.Width; j++)
-                //    {
-                //        foreach (var b in Figury)
-                //            if (b.X == j && b.Y == i)
-                //                counter++;
-                //    }
-
-                    //    if (counter == Settings.Width)
-                    //    {
-                    //        List<int> toDelete = new List<int>();
-
-                    //        for (int j = 0; j < Figury.Count; j++)
-                    //            if (Figury[j].Y == i)
-                    //                toDelete.Add(j);
-
-                    //        for (int j = toDelete.Count - 1; j >= 0; j--)
-                    //            Figury.RemoveAt(toDelete[j]);
-
-                    //        for (int j = 0; j < Figury.Count; j++)
-                    //            if (Figury[j].Y < i)
-                    //                Figury[j].Y += 1;
-                    //        Settings.Score += 10;
-                    //        lblScore.Text = Settings.Score.ToString();
-                    //    }
-                    //}
+             //Detect collision with other Figury to prevent movement
+             if(Figury[indexActive].Direction == Direction.Stop)
+                Figura.FullRows(Figury, Settings.Width, Settings.Height);
         }
         private void HorrizontalMove()
         {

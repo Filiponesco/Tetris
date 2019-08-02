@@ -181,6 +181,10 @@ namespace Tetris
                                 if (toDelete[j].Equals(Figury[m].Bloki[p]))
                                     Figury[m].Bloki.Remove(toDelete[j]);
                         }
+                    for (int j = 0; j < Figury.Count; j++)
+                        for(int k = 0; k < Figury[j].Bloki.Count;k++)
+                        if (Figury[j].Bloki[k].Y < i)
+                            Figury[j].Bloki[k].Y += 1;
                 }
             }
         }
