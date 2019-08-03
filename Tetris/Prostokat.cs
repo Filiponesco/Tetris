@@ -16,6 +16,11 @@ namespace Tetris
             X = 0;
             Y = 0;
         }
+        public Prostokat(double x, double y)
+        {
+            X = (int)x;
+            Y = (int)y;
+        }
 
     }
 }

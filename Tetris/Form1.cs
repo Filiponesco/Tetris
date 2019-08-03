@@ -56,7 +56,8 @@ namespace Tetris
         {
             int maxXPos = pbEkran.Size.Width / Settings.Size - 1; //-1 bo anchor point to lewy gorny wierzchołek
 
-            Random random = new Random();
+            if (Figury.Count != 0)
+                Figury[Figury.Count - 1].Direction = Direction.Stop;
             Figury.Add(new Figura());      
         }
 
@@ -111,25 +112,27 @@ namespace Tetris
         private void MoveBlock()
         {
             int indexActive = Figury.Count - 1; //aktywny blok
+            if (!Figura.CollisionWithOtherFiguryVertically(Figury))
+            {
                 Figury[indexActive].Move(0, 1);
-                int maxXPos = GetMaxXPos();
-                int maxYPos = GetMaxYPos();
+                Figury[indexActive].IleRazySpadal++;
+            }
+            int maxXPos = GetMaxXPos();
+            int maxYPos = GetMaxYPos();
 
                 ////Detect collission with floor  
             if (Figury[indexActive].CollisionWithFloor(maxYPos))
             {
-                Figury[indexActive].Direction = Direction.Stop;
                 GenerateBlock();
             }
             if (Figura.CollisionWithOtherFiguryVertically(Figury))
             {
-                Figury[indexActive].Direction = Direction.Stop;
                 GenerateBlock();
             }
 
              //Detect collision with other Figury to prevent movement
              if(Figury[indexActive].Direction == Direction.Stop)
-                Figura.FullRows(Figury, Settings.Width, Settings.Height);
+                Figura.DeleteFullRows(Figury, Settings.Width, Settings.Height);
         }
         private void HorrizontalMove()
         {
@@ -138,11 +141,17 @@ namespace Tetris
             {
                 case Direction.Right:
                     if (!Figury[indexActive].CollisionWithRightWall(GetMaxXPos()) && !Figura.CollisionWithOtherFiguryHorrizontalLeft(Figury))
+                    {
+                        Figury[indexActive].RoznicaPozycjaX++;
                         Figury[indexActive].Move(1, 0);
+                    }  
                     break;
                 case Direction.Left:
                     if (!Figury[indexActive].CollisionWithLeftWall() && !Figura.CollisionWithOtherFiguryHorrizontalRight(Figury))
+                    {
+                        Figury[indexActive].RoznicaPozycjaX--;
                         Figury[indexActive].Move(-1, 0);
+                    }
                     break;
             }
             pbEkran.Invalidate();
@@ -173,6 +182,12 @@ namespace Tetris
                 Figury[indexActive].Direction = Direction.Right;
             else if (Input.KeyPressed(Keys.Left))
                 Figury[indexActive].Direction = Direction.Left;
+            else if (Input.KeyPressed(Keys.Up))
+            {
+                Figury[indexActive].KtoryObrot++;
+                int obrot = Figury[indexActive].KtoryObrot;
+                Figury[indexActive].Turn(obrot);
+            }
             else
                 Figury[indexActive].Direction = Direction.Down;
         }

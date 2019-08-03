@@ -21,7 +21,7 @@ namespace Tetris
             Width = 10;
             Height = 20;
             Size = 20; //rozmiar jednego kwadratu
-            Speed = 12;
+            Speed = 2;
             Score = 0;
             GameOver = false;
 

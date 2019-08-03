@@ -18,20 +18,13 @@ namespace Tetris
     }
     class Figura
     {
-        public static List<Prostokat> allBloki = new List<Prostokat>();
+        private string key;
         #region properties
         public List<Prostokat> Bloki { get; set; }
         public Direction Direction { get; set; }
-        public static List<Prostokat> AllBloki {
-            get
-            {
-                return allBloki;
-            }
-            set
-            {
-                allBloki = value;
-            }
-        }
+        public int IleRazySpadal { get; set; }
+        public int RoznicaPozycjaX { get; set; }
+        public int KtoryObrot { get; set; }
         #endregion
         private readonly Hashtable Figures = new Hashtable()
         {
@@ -44,20 +37,56 @@ namespace Tetris
             {"J", new int[,]{ {0, 0}, {0, 1}, {0, 2}, {-1, 2} } },
             {"T", new int[,]{ {0, 0}, {0, 1}, {1, 1}, {-1, 1} } },
         };
+        private readonly Hashtable Figures1Rotate = new Hashtable()
+        {
+
+            {"O", new int[,]{ {0, 0}, {0, 1}, {1, 0}, {1, 1} } },
+            {"I", new int[,]{ {-1, 0}, {0, 0}, {1, 0}, {2, 0} } },
+            {"S", new int[,]{ {0, 0}, {0, 1}, {1, 1}, {1, 2} } },
+            {"Z", new int[,]{ {1, 0}, {0, 1}, {0, 2}, {1, 1} } },
+            {"L", new int[,]{ {-1, 1}, {0, 1}, {1, 0}, {1, 1} } },
+            {"J", new int[,]{ {-1, 0}, {0, 0}, {1, 0}, {1, 1} } },
+            {"T", new int[,]{ {0, 0}, {0, 1}, {0, 2}, {-1, 1} } },
+        };
+        private readonly Hashtable Figures2Rotate = new Hashtable()
+        {
+
+            {"O", new int[,]{ {0, 0}, {0, 1}, {1, 0}, {1, 1} } },
+            {"I", new int[,]{ {0, 0}, {0, 1}, {0, 2}, {0, 3} } },
+            {"S", new int[,]{ {0, 0}, {0, 1}, {-1, 1}, {1, 0} } },
+            {"Z", new int[,]{ {-1, 0}, {0, 0}, {0, 1}, {1, 1} } },
+            {"L", new int[,]{ {0, 0}, {1, 0}, {1, 1}, {1, 2} } },
+            {"J", new int[,]{ {0, 0}, {1, 0}, {0, 1}, {0, 2} } },
+            {"T", new int[,]{ {-1, 0}, {0, 0}, {1, 0}, {0, 1} } },
+        };
+        private readonly Hashtable Figures3Rotate = new Hashtable()
+        {
+
+            {"O", new int[,]{ {0, 0}, {0, 1}, {1, 0}, {1, 1} } },
+            {"I", new int[,]{ {-1, 0}, {0, 0}, {1, 0}, {2, 0} } },
+            {"S", new int[,]{ {0, 0}, {0, 1}, {1, 1}, {1, 2} } },
+            {"Z", new int[,]{ {1, 0}, {0, 1}, {0, 2}, {1, 1} } },
+            {"L", new int[,]{ {-1, 0}, {0, 0}, {1, 0}, {-1, 1} } },
+            {"J", new int[,]{ {-1, 0}, {-1, 1}, {0, 1}, {1, 1} } },
+            {"T", new int[,]{ {0, 0}, {1, 1}, {0, 1}, {0, 2} } },
+        };
         private readonly string[] Keys = new string[] { "O", "I", "S", "Z", "L", "J", "T" };
 
         public Figura()
         {
             Bloki = new List<Prostokat>();
+            IleRazySpadal = 0;
+            RoznicaPozycjaX = Settings.Width / 2;
+            KtoryObrot = 0;
             Random r = new Random();
-            int index = r.Next(0, 1);
-            string key = Keys[index];
+            int index = r.Next(0, 7);
+            //index = 1;
+            key = Keys[index];
             int[,] temp = (int[,])Figures[key];
             for (int i = 0; i < 4; i++)
             {
                 Prostokat p = new Prostokat { X = temp[i, 0] + Settings.Width / 2, Y = temp[i, 1] };
                 Bloki.Add(p);
-                AllBloki.Add(p);
             }
         }
         public void Move(int a, int b)
@@ -95,6 +124,14 @@ namespace Tetris
                     return true;
             }
             return false;
+        }
+        public static List<Prostokat> GetAllBloki(List<Figura> Figury)
+        {
+            List<Prostokat> AllBloki = new List<Prostokat>();
+            foreach(Figura f in Figury)
+                foreach(Prostokat p in f.Bloki)
+                    AllBloki.Add(p);
+            return AllBloki;
         }
         public static bool CollisionWithOtherFiguryVertically(List<Figura> Figury)
         {
@@ -147,15 +184,14 @@ namespace Tetris
             }
             return false;
         }
-        //dodac kolizje na ukos
-        public static void FullRows(List<Figura> Figury, int w, int h) //uwaga trzeba pamietac ze klocek musi byc juz nieruchomy zeby zniknal wiersz!
+        public static void DeleteFullRows(List<Figura> Figury, int w, int h)
         {
             for (int i = 0; i < h; i++)
             {
                 int counter = 0;
                 for (int j = 0; j < w; j++)
                 {
-                    foreach(Prostokat p in AllBloki) //przyspieszenie pętli
+                    foreach(Prostokat p in GetAllBloki(Figury)) //przyspieszenie pętli
                     {
                          if (p.X == j && p.Y == i)
                          counter++;
@@ -167,19 +203,21 @@ namespace Tetris
                     List<int> indexFiguryToDelete = new List<int>();
                     List<Prostokat> toDelete = new List<Prostokat>();
 
-                    for(int k = 0; k < AllBloki.Count; k++)
+                    for(int k = 0; k < GetAllBloki(Figury).Count; k++)
                     {
-                        if (AllBloki[k].Y == i)
+                        if (GetAllBloki(Figury)[k].Y == i)
                         {
-                            toDelete.Add(AllBloki[k]);
+                            toDelete.Add(GetAllBloki(Figury)[k]);
                         }
                     }
                     for (int j = toDelete.Count - 1; j >= 0; j--)
                         for (int m = 0; m < Figury.Count; m++)
                         {
                             for (int p = 0; p < Figury[m].Bloki.Count; p++)
+                            {
                                 if (toDelete[j].Equals(Figury[m].Bloki[p]))
                                     Figury[m].Bloki.Remove(toDelete[j]);
+                            }
                         }
                     for (int j = 0; j < Figury.Count; j++)
                         for(int k = 0; k < Figury[j].Bloki.Count;k++)
@@ -188,12 +226,37 @@ namespace Tetris
                 }
             }
         }
-        //public void Clear()
-        //{
-        //    Size = 0;
-        //    Items.Clear();
-        //}
+        public void Turn(int obrot)
+        {
+            int sumaX = 0;
+            foreach(Prostokat p in Bloki)
+            {
+                sumaX += p.X;
+            }
+            int sredniaX = sumaX / Bloki.Count + 1;
+            Bloki.Clear();
+            int[,] temp = new int[4,4];
+            switch(obrot%4)
+            {
+                case 1: temp = (int[,])Figures1Rotate[key];
+                    break;
+                case 2:
+                    temp = (int[,])Figures2Rotate[key];
+                    break;
+                case 3:
+                    temp = (int[,])Figures3Rotate[key];
+                    break;
+                case 0:
+                    temp = (int[,])Figures[key];
+                    break;
+            }
+            for (int i = 0; i < 4; i++)
+            {
+                Prostokat p = new Prostokat { X = temp[i, 0] + RoznicaPozycjaX, Y = temp[i, 1] + IleRazySpadal };
+                Bloki.Add(p);
+            }
 
+        }
         //public void Turn(int a)
         //{
         //    int mx = 0;
