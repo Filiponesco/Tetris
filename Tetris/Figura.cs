@@ -41,11 +41,11 @@ namespace Tetris
         {
 
             {"O", new int[,]{ {0, 0}, {0, 1}, {1, 0}, {1, 1} } },
-            {"I", new int[,]{ {-1, 0}, {0, 0}, {1, 0}, {2, 0} } },
+            {"I", new int[,]{ {0, 0}, {-1, 0}, {1, 0}, {2, 0} } },
             {"S", new int[,]{ {0, 0}, {0, 1}, {1, 1}, {1, 2} } },
-            {"Z", new int[,]{ {1, 0}, {0, 1}, {0, 2}, {1, 1} } },
-            {"L", new int[,]{ {-1, 1}, {0, 1}, {1, 0}, {1, 1} } },
-            {"J", new int[,]{ {-1, 0}, {0, 0}, {1, 0}, {1, 1} } },
+            {"Z", new int[,]{ {0, 1}, {1, 0}, {0, 2}, {1, 1} } },
+            {"L", new int[,]{ {0, 1}, {-1, 1}, {1, 0}, {1, 1} } },
+            {"J", new int[,]{ {0, 0}, {-1, 0}, {1, 0}, {1, 1} } },
             {"T", new int[,]{ {0, 0}, {0, 1}, {0, 2}, {-1, 1} } },
         };
         private readonly Hashtable Figures2Rotate = new Hashtable()
@@ -54,20 +54,20 @@ namespace Tetris
             {"O", new int[,]{ {0, 0}, {0, 1}, {1, 0}, {1, 1} } },
             {"I", new int[,]{ {0, 0}, {0, 1}, {0, 2}, {0, 3} } },
             {"S", new int[,]{ {0, 0}, {0, 1}, {-1, 1}, {1, 0} } },
-            {"Z", new int[,]{ {-1, 0}, {0, 0}, {0, 1}, {1, 1} } },
+            {"Z", new int[,]{ {0, 0}, {-1, 0}, {0, 1}, {1, 1} } },
             {"L", new int[,]{ {0, 0}, {1, 0}, {1, 1}, {1, 2} } },
             {"J", new int[,]{ {0, 0}, {1, 0}, {0, 1}, {0, 2} } },
-            {"T", new int[,]{ {-1, 0}, {0, 0}, {1, 0}, {0, 1} } },
+            {"T", new int[,]{ {0, 0}, {-1, 0}, {1, 0}, {0, 1} } },
         };
         private readonly Hashtable Figures3Rotate = new Hashtable()
         {
 
             {"O", new int[,]{ {0, 0}, {0, 1}, {1, 0}, {1, 1} } },
-            {"I", new int[,]{ {-1, 0}, {0, 0}, {1, 0}, {2, 0} } },
+            {"I", new int[,]{ {0, 0}, {-1, 0}, {1, 0}, {2, 0} } },
             {"S", new int[,]{ {0, 0}, {0, 1}, {1, 1}, {1, 2} } },
-            {"Z", new int[,]{ {1, 0}, {0, 1}, {0, 2}, {1, 1} } },
-            {"L", new int[,]{ {-1, 0}, {0, 0}, {1, 0}, {-1, 1} } },
-            {"J", new int[,]{ {-1, 0}, {-1, 1}, {0, 1}, {1, 1} } },
+            {"Z", new int[,]{ {0, 1}, {1, 0}, {0, 2}, {1, 1} } },
+            {"L", new int[,]{ {0, 0}, {-1, 0}, {1, 0}, {-1, 1} } },
+            {"J", new int[,]{ {0, 1}, {-1, 1}, {-1, 0}, {1, 1} } },
             {"T", new int[,]{ {0, 0}, {1, 1}, {0, 1}, {0, 2} } },
         };
         private readonly string[] Keys = new string[] { "O", "I", "S", "Z", "L", "J", "T" };
@@ -228,14 +228,13 @@ namespace Tetris
         }
         public void Turn(int obrot)
         {
-            int sumaX = 0;
-            foreach(Prostokat p in Bloki)
-            {
-                sumaX += p.X;
-            }
-            int sredniaX = sumaX / Bloki.Count + 1;
+            int pozycjaX;
+            if(Bloki[0].X > Settings.Width / 2)
+                pozycjaX = Bloki[0].X - 1;
+            else
+                pozycjaX = Bloki[0].X + 1;
             Bloki.Clear();
-            int[,] temp = new int[4,4];
+            int[,] temp = new int[4,2];
             switch(obrot%4)
             {
                 case 1: temp = (int[,])Figures1Rotate[key];
@@ -252,51 +251,10 @@ namespace Tetris
             }
             for (int i = 0; i < 4; i++)
             {
-                Prostokat p = new Prostokat { X = temp[i, 0] + RoznicaPozycjaX, Y = temp[i, 1] + IleRazySpadal };
+                Prostokat p = new Prostokat { X = temp[i, 0] + pozycjaX, Y = temp[i, 1] + IleRazySpadal };
                 Bloki.Add(p);
             }
 
         }
-        //public void Turn(int a)
-        //{
-        //    int mx = 0;
-        //    int my = 0;
-        //    double angle = a * Math.PI / 2;
-        //    List<Vector> temp = new List<Vector>();
-        //    bool ok = true;
-
-        //    foreach (Vector v in Items)
-        //    {
-        //        mx += (int)v.X;
-        //        my += (int)v.Y;
-        //    }
-
-        //    mx = (int)Math.Round((double)mx / Size);
-        //    my = (int)Math.Round((double)my / Size);
-
-        //    for (int i = 0; i < Size; i++)
-        //    {
-        //        int x = (int)Items[i].X;
-        //        int y = (int)Items[i].Y;
-
-        //        Vector v = new Vector(mx + (x - mx) * Math.Cos(angle) - (y - my) * Math.Sin(angle),
-        //            my + (x - mx) * Math.Sin(angle) + (y - my) * Math.Cos(angle));
-
-        //        temp.Add(v);
-        //    }
-
-        //    foreach (Vector v in temp)
-        //    {
-        //        if (v.X < 0 || v.X >= Settings.Width)
-        //            ok = false;
-
-        //        if (v.Y < 0 || v.Y >= Settings.Height)
-        //            ok = false;
-        //    }
-
-        //    if (ok)
-        //        for (int i = 0; i < Size; i++)
-        //            Items[i] = temp[i];
-        //}
     }
 }
