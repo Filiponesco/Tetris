@@ -58,7 +58,10 @@ namespace Tetris
 
             if (Figury.Count != 0)
                 Figury[Figury.Count - 1].Direction = Direction.Stop;
-            Figury.Add(new Figura());      
+            if(Figury.Count > 0 && Figury[Figury.Count - 1].IsKoniecGry())
+                Settings.GameOver = true;
+            
+            Figury.Add(new Figura());    
         }
 
         private void UpdateScreen(object sender, EventArgs e)
@@ -75,6 +78,7 @@ namespace Tetris
             else
             { 
                 MoveBlock();
+                lblScore.Text = Settings.Score.ToString();
             }
             pbEkran.Invalidate();
 

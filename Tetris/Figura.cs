@@ -223,6 +223,7 @@ namespace Tetris
                         for(int k = 0; k < Figury[j].Bloki.Count;k++)
                         if (Figury[j].Bloki[k].Y < i)
                             Figury[j].Bloki[k].Y += 1;
+                    Settings.Score += 10;
                 }
             }
         }
@@ -255,6 +256,15 @@ namespace Tetris
                 Bloki.Add(p);
             }
 
+        }
+        public Boolean IsKoniecGry()
+        {
+            foreach(Prostokat p in Bloki)
+            {
+                if (p.Y < 1 && Direction == Direction.Stop)
+                    return true;
+            }
+            return false;
         }
     }
 }
